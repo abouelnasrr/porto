@@ -1,0 +1,60 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- <title>{% block title %}My Site{% endblock %}</title> -->
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-900 text-white min-h-screen font-sans">
+
+    <!-- Navbar -->
+    <nav class="bg-gray-800 shadow-lg p-4 flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-white animate-fade-in">My Portfolio</h1>
+        <div class="space-x-4">
+            <a href="/" class="hover:text-cyan-400 transition duration-300">Home</a>
+            <!-- <a href="/youtube/" class="hover:text-cyan-400 transition duration-300">Youtube</a> -->
+            <a href="/cv/" class="hover:text-cyan-400 transition duration-300">CV</a>
+            <a href="/dashboard/" class="hover:text-cyan-400 transition duration-300">Dashboard</a>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <div class="container mx-auto p-6">
+        {% block content %}{% endblock %}
+    </div>
+
+</body>
+
+</html>
+<style>
+    @keyframes fade-in {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+    
+    @keyframes slide-in-top {
+        from {
+            transform: translateY(-20px);
+            opacity: 0;
+        }
+        to {
+            transform: translateY(0);
+            opacity: 1;
+        }
+    }
+    
+    .animate-fade-in {
+        animation: fade-in 1s ease-in-out both;
+    }
+    
+    .animate-slide-in-top {
+        animation: slide-in-top 0.8s ease-out both;
+    }
+</style>

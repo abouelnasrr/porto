@@ -1,0 +1,437 @@
+{% extends "main/base.html" %} {% load project_filters %} {% block content %}
+<div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-xl shadow-md mt-10 space-y-6 animate-fade-in">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">Main Info</h2>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-4">
+        {% csrf_token %}
+        <!-- Name -->
+        <div>
+            <label for="id_name" class="block text-lg font-medium text-white mb-1">Name</label> {{ form.name }}
+        </div>
+
+        <!-- Title -->
+        <div>
+            <label for="id_title" class="block text-lg font-medium text-white mb-1">Title</label> {{ form.title }}
+        </div>
+
+        <!-- Photo Upload -->
+        <div>
+            <label for="id_photo" class="block text-lg font-medium text-white mb-1">Photo</label> {{ form.photo }}
+        </div>
+
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded transition duration-300">
+            Submit
+        </button>
+    </form>
+</div>
+
+<!-- Add New Project Section -->
+<section class="bg-gray-800 py-10 mt-10 rounded-lg shadow-lg">
+    <div class="max-w-4xl mx-auto px-4">
+        <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">Add New Project</h2>
+
+        <form method="POST" enctype="multipart/form-data" class="space-y-6">
+            {% csrf_token %}
+            <!-- Project Name -->
+            <div>
+                <label for="id_name" class="block text-lg font-medium text-white mb-1">Project Name</label>
+                <input type="text" name="name" class="w-full p-2 rounded bg-gray-700 text-white" value="{{ project_form.name.value }}" required>
+            </div>
+
+            <!-- Project Description -->
+            <div>
+                <label for="id_description" class="block text-lg font-medium text-white mb-1">Description</label>
+                <textarea name="description" class="w-full p-2 rounded bg-gray-700 text-white" required>{{ project_form.description.value }}</textarea>
+            </div>
+
+            <!-- Project Duration -->
+            <div>
+                <label for="id_duration" class="block text-lg font-medium text-white mb-1">Duration</label>
+                <input type="text" name="duration" class="w-full p-2 rounded bg-gray-700 text-white" value="{{ project_form.duration.value }}" required>
+            </div>
+
+            <!-- Project Media -->
+            <div>
+                <label for="id_media" class="block text-lg font-medium text-white mb-1">Upload Media</label>
+                <input type="file" name="media" class="w-full p-2 rounded bg-gray-700 text-white">
+            </div>
+
+            <!-- Multiple File Upload -->
+            <div>
+                <label for="file" class="block text-lg font-medium text-white mb-1">Additional Files (optional)</label>
+                <input type="file" name="file" multiple class="w-full p-2 rounded bg-gray-700 text-white">
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded transition duration-300 w-full">
+                    Add Project
+                </button>
+            </div>
+        </form>
+
+        <h3 class="text-2xl font-semibold mt-10 mb-4 text-white">All Projects</h3>
+        <table class="w-full text-left border border-gray-700">
+            <thead>
+                <tr class="bg-gray-800">
+                    <th class="p-2 text-white">Name</th>
+                    <th class="p-2 text-white">Description</th>
+                    <th class="p-2 text-white">Duration</th>
+                    <th class="p-2 text-white">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr class="border-t border-gray-700" data-project='{{ project|dictify|json_script:"project_data" }}'>
+                    <td class="p-2">{{ project.name }}</td>
+                    <td class="p-2">{{ project.description }}</td>
+                    <td class="p-2">{{ project.duration }}</td>
+                    <td class="p-2">
+                        <a href="#" class="text-blue-400" onclick="openEditModal('{{ project.id }}')">Edit</a> |
+                        <a href="{% url 'delete_project' project.pk %}" class="text-red-400">Delete</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- Edit Project Modal -->
+<div id="editProjectModal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+    <div class="bg-white p-8 rounded-lg w-3/4 max-w-lg">
+        <button class="absolute top-2 right-2 text-black" onclick="closeEditModal()">×</button>
+        <h2 class="text-2xl font-bold mb-6">Edit Project</h2>
+
+        <form method="POST" enctype="multipart/form-data" id="editProjectForm">
+            {% csrf_token %}
+            <input type="hidden" id="edit_project_id" name="project_id">
+
+            <!-- Project Name -->
+            <div>
+                <label for="edit_name" class="block text-lg font-medium text-black mb-1">Project Name</label>
+                <input type="text" id="edit_name" name="name" class="w-full p-2 rounded bg-gray-200 text-black">
+            </div>
+
+            <!-- Project Description -->
+            <div>
+                <label for="edit_description" class="block text-lg font-medium text-black mb-1">Description</label>
+                <textarea id="edit_description" name="description" class="w-full p-2 rounded bg-gray-200 text-black"></textarea>
+            </div>
+
+            <!-- Project Duration -->
+            <div>
+                <label for="edit_duration" class="block text-lg font-medium text-black mb-1">Duration</label>
+                <input type="text" id="edit_duration" name="duration" class="w-full p-2 rounded bg-gray-200 text-black">
+            </div>
+
+            <!-- Submit Button -->
+            <div>
+                <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded transition duration-300 w-full">
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Messages Section -->
+<div class="mt-16">
+    <h2 class="text-2xl text-cyan-400 font-bold mb-4">📥 Inbox</h2>
+    <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-700">
+        <table class="min-w-full bg-gray-800 text-white text-sm rounded-lg overflow-hidden">
+            <thead>
+                <tr class="bg-gray-900 text-cyan-300">
+                    <th class="py-3 px-4 text-left">Name</th>
+                    <th class="py-3 px-4 text-left">Email</th>
+                    <th class="py-3 px-4 text-left">WhatsApp</th>
+                    <th class="py-3 px-4 text-left">Message</th>
+                    <th class="py-3 px-4 text-left">Time Left</th>
+                    <th class="py-3 px-4 text-left">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for m in messages %}
+                <tr class="border-t border-gray-700">
+                    <td class="py-2 px-4">{{ m.name }}</td>
+                    <td class="py-2 px-4">{{ m.email }}</td>
+                    <td class="py-2 px-4">{{ m.whatsapp }}</td>
+                    <td class="py-2 px-4">{{ m.message }}</td>
+                    <td class="py-2 px-4"><span class="timer" data-timestamp="{{ m.timestamp|date:'c' }}"></span></td>
+                    <td class="py-2 px-4 space-x-2">
+                        <form method="post" action="{% url 'save_message' m.id %}" class="inline">{% csrf_token %}
+                            <button class="text-green-400 hover:underline">Save</button>
+                        </form>
+                        <form method="post" action="{% url 'star_message' m.id %}" class="inline">{% csrf_token %}
+                            <button class="text-yellow-400 hover:underline">★</button>
+                        </form>
+                        <form method="post" action="{% url 'delete_message' m.id %}" class="inline">{% csrf_token %}
+                            <button class="text-red-400 hover:underline">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="text-2xl text-green-400 font-bold mt-10 mb-4">💾 Saved</h2>
+    <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-700">
+        <table class="min-w-full bg-gray-800 text-white text-sm rounded-lg overflow-hidden">
+            <thead>
+                <tr class="bg-gray-900 text-green-300">
+                    <th class="py-3 px-4 text-left">Name</th>
+                    <th class="py-3 px-4 text-left">Message</th>
+                    <th class="py-3 px-4 text-left">Time Left</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in saved %}
+                <tr class="border-t border-gray-700">
+                    <td class="py-2 px-4">{{ s.name }}</td>
+                    <td class="py-2 px-4">{{ s.message }}</td>
+                    <td class="py-2 px-4">Permanent</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <h2 class="text-2xl text-yellow-400 font-bold mt-10 mb-4">⭐ Starred</h2>
+    <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-700">
+        <table class="min-w-full bg-gray-800 text-white text-sm rounded-lg overflow-hidden">
+            <thead>
+                <tr class="bg-gray-900 text-yellow-300">
+                    <th class="py-3 px-4 text-left">Name</th>
+                    <th class="py-3 px-4 text-left">Message</th>
+                    <th class="py-3 px-4 text-left">Time Left</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for s in starred %}
+                <tr class="border-t border-gray-700">
+                    <td class="py-2 px-4">{{ s.name }}</td>
+                    <td class="py-2 px-4">{{ s.message }}</td>
+                    <td class="py-2 px-4">Permanent</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="bg-gradient-to-r from-blue-500 to-green-500 p-6 rounded-lg mt-4">
+    <h2 class="text-2xl font-bold text-white">YouTube Management</h2>
+    <p class="text-white mt-2">Manage your YouTube videos here.</p>
+</div>
+
+<!-- CV Management Section -->
+<section class="bg-gray-800 p-8 rounded-xl shadow-xl mt-12 text-white space-y-8">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-700 pb-2">CV Management</h2>
+
+    <!-- Form Wrapper -->
+    <div class="grid md:grid-cols-2 gap-6">
+
+        <!-- Experience -->
+        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
+            <h3 class="text-xl font-semibold text-cyan-300">Add Experience</h3>
+            <form method="post" action="{% url 'add_experience' %}" class="space-y-3">
+                {% csrf_token %} {{ experience_form.as_p }}
+                <button onclick="toggleModal('experienceModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
+                    Add Experience
+                </button>
+            </form>
+        </div>
+
+        <!-- Education -->
+        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
+            <h3 class="text-xl font-semibold text-cyan-300">Add Education</h3>
+            <form method="post" action="{% url 'add_education' %}" class="space-y-3">
+                {% csrf_token %} {{ education_form.as_p }}
+                <button onclick="toggleModal('educationModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
+                    Add Education
+                </button>
+            </form>
+        </div>
+
+        <!-- Skill -->
+        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
+            <h3 class="text-xl font-semibold text-cyan-300">Add Skill</h3>
+            <form method="post" action="{% url 'add_skill' %}" class="space-y-3">
+                {% csrf_token %} {{ skill_form.as_p }}
+                <button onclick="toggleModal('skillModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
+                    Add Skill
+                </button>
+            </form>
+        </div>
+
+        <!-- Certificate -->
+        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
+            <h3 class="text-xl font-semibold text-cyan-300">Add Certificate</h3>
+            <form method="post" action="{% url 'add_certificate' %}" class="space-y-3">
+                {% csrf_token %} {{ certificate_form.as_p }}
+                <button onclick="toggleModal('certificateModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
+                    Add Certificate
+                </button>
+            </form>
+        </div>
+
+        <!-- Language -->
+        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
+            <h3 class="text-xl font-semibold text-cyan-300">Add Language</h3>
+            <form method="post" action="{% url 'add_language' %}" class="space-y-3">
+                {% csrf_token %} {{ language_form.as_p }}
+                <button onclick="toggleModal('languageModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
+                    Add Language
+                </button>
+            </form>
+        </div>
+
+        <!-- Volunteering -->
+        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
+            <h3 class="text-xl font-semibold text-cyan-300">Add Volunteering</h3>
+            <form method="post" action="{% url 'add_volunteering' %}" class="space-y-3">
+                {% csrf_token %} {{ volunteering_form.as_p }}
+                <button onclick="toggleModal('volunteeringModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
+                    Add Volunteering
+                </button>
+            </form>
+        </div>
+
+    </div>
+</section>
+
+<!-- Summary Section -->
+<section class="bg-gray-800 p-6 rounded-xl shadow-lg mt-10">
+    <h2 class="text-2xl font-bold text-cyan-400 mb-4">Edit Professional Summary</h2>
+    <form method="POST">
+        {% csrf_token %}
+        <textarea name="summary" rows="6" class="w-full p-4 bg-gray-700 text-white rounded-md">{{ summary.content }}</textarea>
+        <button type="submit" class="mt-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-6 py-2 rounded transition-all duration-300 shadow">
+        Save Summary
+      </button>
+    </form>
+</section>
+<!-- Experience Modal -->
+<div id="experienceModal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
+    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-lg">
+        <h2 class="text-xl font-bold mb-4 text-purple-300">Add Experience</h2>
+        <form method="POST" action="{% url 'add_experience' %}">
+            {% csrf_token %} {{ experience_form.as_p }}
+            <div class="flex justify-end space-x-2 mt-4">
+                <button type="button" onclick="toggleModal('experienceModal')" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700">Cancel</button>
+                <button type="submit" class="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Add Education Modal -->
+<div id="educationModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
+    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+        <h2 class="text-xl font-bold mb-4 text-green-400">Add Education</h2>
+        <form method="POST" action="{% url 'add_education' %}">
+            {% csrf_token %} {{ education_form.as_p }}
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="toggleModal('educationModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Add Skill Modal -->
+<div id="skillModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
+    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+        <h2 class="text-xl font-bold mb-4 text-yellow-400">Add Skill</h2>
+        <form method="POST" action="{% url 'add_skill' %}">
+            {% csrf_token %} {{ skill_form.as_p }}
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="toggleModal('skillModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Add Certificate Modal -->
+<div id="certificateModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
+    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+        <h2 class="text-xl font-bold mb-4 text-red-400">Add Certificate</h2>
+        <form method="POST" action="{% url 'add_certificate' %}">
+            {% csrf_token %} {{ certificate_form.as_p }}
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="toggleModal('certificateModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 rounded">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Add Language Modal -->
+<div id="languageModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
+    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+        <h2 class="text-xl font-bold mb-4 text-blue-400">Add Language</h2>
+        <form method="POST" action="{% url 'add_language' %}">
+            {% csrf_token %} {{ language_form.as_p }}
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="toggleModal('languageModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- Add Volunteering Modal -->
+<div id="volunteeringModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
+    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
+        <h2 class="text-xl font-bold mb-4 text-indigo-400">Add Volunteering</h2>
+        <form method="POST" action="{% url 'add_volunteering' %}">
+            {% csrf_token %} {{ volunteering_form.as_p }}
+            <div class="flex justify-end gap-3 mt-4">
+                <button type="button" onclick="toggleModal('volunteeringModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
+                <button type="submit" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded">Add</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+<script>
+    function toggleModal(id) {
+        const modal = document.getElementById(id);
+        modal.classList.toggle('hidden');
+    }
+
+    function openEditModal(projectId) {
+        const projectRow = document.querySelector(`[data-project*='"id":${projectId}]`);
+        const projectData = JSON.parse(projectRow.getAttribute('data-project'));
+
+        // Open the modal
+        document.getElementById('editProjectModal').classList.remove('hidden');
+
+        // Fill the modal form with the project data
+        document.getElementById('edit_project_id').value = projectData.id;
+        document.getElementById('edit_name').value = projectData.name;
+        document.getElementById('edit_description').value = projectData.description;
+        document.getElementById('edit_duration').value = projectData.duration;
+    }
+
+    function closeEditModal() {
+        document.getElementById('editProjectModal').classList.add('hidden');
+    }
+    document.querySelectorAll('.timer').forEach(function(span) {
+        const timestamp = new Date(span.dataset.timestamp);
+        const interval = setInterval(() => {
+            const now = new Date();
+            const expirationTime = new Date(timestamp.getTime() + 30 * 24 * 60 * 60 * 1000);
+            let diff = expirationTime - now;
+
+            if (diff <= 0) {
+                span.textContent = "Expired";
+                clearInterval(interval);
+            } else {
+                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                const mins = Math.floor((diff / (1000 * 60)) % 60);
+                const secs = Math.floor((diff / 1000) % 60);
+                span.textContent = `${days}d ${hours}h ${mins}m ${secs}s`;
+            }
+        }, 1000);
+    });
+</script>
+
+{% endblock %}
