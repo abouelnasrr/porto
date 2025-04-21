@@ -1,0 +1,135 @@
+{% extends "main/base.html" %} {% load widget_tweaks %} {% load static %}
+
+<!-- <head>
+    <meta charset="UTF-8">
+    <title>Porto Page</title>
+</head> -->
+
+
+{% block content %}
+<div class="flex flex-col items-center justify-center space-y-6 animate-fade-in">
+    <img src="{% if is_uploaded_photo %}{{ photo_url }}{% else %}{% static photo_url %}{% endif %}" alt="Profile Photo" class="w-48 h-48 rounded-full object-cover border-4 border-cyan-400 shadow-lg transition duration-500 hover:scale-105" />
+
+    <div class="text-center">
+        <h2 class="text-4xl font-bold mb-2 animate-slide-in-top">{{ name }}</h2>
+        <p class="text-lg text-gray-300 animate-fade-in">{{ title }}</p>
+    </div>
+</div>
+<section class="text-white bg-gray-900 py-12">
+    <div class="max-w-7xl mx-auto px-4">
+        <h2 class="text-4xl font-bold mb-8">Projects</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            {% for project in projects %}
+            <div class="bg-gray-800 rounded-xl shadow-md p-4">
+                <h3 class="text-2xl font-semibold">{{ project.name }}</h3>
+                <p class="mt-2">{{ project.description }}</p>
+                <p class="text-sm text-gray-400 mt-1">Duration: {{ project.duration }}</p>
+                <button onclick="openModal('{{ project.id }}')" class="mt-4 bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded">View</button>
+
+                <!-- Modal -->
+                <div id="modal-{{ project.id }}" class="hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 flex items-center justify-center z-50">
+                    <div class="bg-white p-4 rounded-xl w-[80%] h-[80%] overflow-hidden relative">
+                        <button onclick="closeModal('{{ project.id }}')" class="absolute top-2 right-2 text-black">&times;</button>
+
+                        <!-- Navigation Arrows -->
+                        <button onclick="changeSlide('{{ project.id }}', -1)" class="absolute left-2 top-1/2 transform -translate-y-1/2 text-black">←</button>
+                        <button onclick="changeSlide('{{ project.id }}', 1)" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-black">→</button>
+
+                        <div class="flex items-center justify-center h-full relative">
+                            <div class="w-full h-full relative overflow-hidden">
+                                {% for media in project.media.all %}
+                                <div class="media-slide hidden absolute inset-0 flex items-center justify-center">
+                                    {% if media.is_video %}
+                                    <video class="w-full max-h-full" controls>
+                                                <source src="{{ media.file.url }}" type="video/mp4">
+                                            </video> {% else %}
+                                    <img src="{{ media.file.url }}" class="w-full max-h-full object-contain" /> {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+<section class="mt-20 bg-gray-900 p-10 rounded-xl shadow-xl text-white animate-fade-in">
+    <h2 class="text-3xl font-bold mb-8 text-cyan-400 text-center">📬 Contact Me</h2>
+
+    <form method="POST" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {% csrf_token %}
+
+        <!-- Name -->
+        <div class="flex flex-col">
+            <label for="id_name" class="mb-2 text-sm text-gray-300">Name</label> {{ form.name|add_class:"bg-gray-800 text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500" }}
+        </div>
+
+        <!-- Email -->
+        <div class="flex flex-col">
+            <label for="id_email" class="mb-2 text-sm text-gray-300">Email</label> {{ form.email|add_class:"bg-gray-800 text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500" }}
+        </div>
+
+        <!-- WhatsApp -->
+        <div class="flex flex-col">
+            <label for="id_whatsapp" class="mb-2 text-sm text-gray-300">WhatsApp Number</label> {{ form.whatsapp|add_class:"bg-gray-800 text-white border border-gray-700 rounded-xl p-3 focus:outline-none focus:ring-2 focus:ring-cyan-500" }}
+        </div>
+
+        <!-- Empty div to maintain 2-column layout -->
+        <div></div>
+
+        <!-- Message (Full Width) -->
+        <div class="flex flex-col md:col-span-2">
+            <label for="id_message" class="mb-2 text-sm text-gray-300">Message</label> {{ form.message|add_class:"bg-gray-800 text-white border border-gray-700 rounded-xl p-3 h-32 focus:outline-none focus:ring-2 focus:ring-cyan-500" }}
+        </div>
+
+        <!-- Submit Button (Centered) -->
+        <div class="md:col-span-2 flex justify-center">
+            <button type="submit" class="bg-cyan-500 text-white font-semibold px-6 py-3 rounded-full hover:bg-cyan-600 transition">
+          Send Message
+        </button>
+        </div>
+    </form>
+</section>
+
+
+
+<script>
+    // Open modal and display the first media item
+    function openModal(id) {
+        document.getElementById(`modal-${id}`).classList.remove('hidden');
+        let slides = document.querySelectorAll(`#modal-${id} .media-slide`);
+        if (slides.length > 0) slides[0].classList.remove('hidden');
+    }
+
+    // Close the modal
+    function closeModal(id) {
+        document.getElementById(`modal-${id}`).classList.add('hidden');
+        let slides = document.querySelectorAll(`#modal-${id} .media-slide`);
+        slides.forEach(s => s.classList.add('hidden'));
+    }
+
+    // Change media slide
+    function changeSlide(id, direction) {
+        let slides = document.querySelectorAll(`#modal-${id} .media-slide`);
+        let currentIndex = Array.from(slides).findIndex(s => !s.classList.contains('hidden'));
+
+        // Hide the current slide
+        if (currentIndex !== -1) {
+            slides[currentIndex].classList.add('hidden');
+        }
+
+        // Calculate the next slide index
+        let nextIndex = currentIndex + direction;
+        if (nextIndex < 0) {
+            nextIndex = slides.length - 1;
+        } else if (nextIndex >= slides.length) {
+            nextIndex = 0;
+        }
+
+        // Show the next slide
+        slides[nextIndex].classList.remove('hidden');
+    }
+</script>
+{% endblock %}
