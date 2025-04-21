@@ -180,6 +180,8 @@
             <thead>
                 <tr class="bg-gray-900 text-green-300">
                     <th class="py-3 px-4 text-left">Name</th>
+                    <th class="py-3 px-4 text-left">Email</th>
+                    <th class="py-3 px-4 text-left">WhatsApp</th>
                     <th class="py-3 px-4 text-left">Message</th>
                     <th class="py-3 px-4 text-left">Time Left</th>
                 </tr>
@@ -188,6 +190,8 @@
                 {% for s in saved %}
                 <tr class="border-t border-gray-700">
                     <td class="py-2 px-4">{{ s.name }}</td>
+                    <td class="py-2 px-4">{{ s.email }}</td>
+                    <td class="py-2 px-4">{{ s.whatsapp }}</td>
                     <td class="py-2 px-4">{{ s.message }}</td>
                     <td class="py-2 px-4">Permanent</td>
                 </tr>
@@ -195,13 +199,15 @@
             </tbody>
         </table>
     </div>
-
+    
     <h2 class="text-2xl text-yellow-400 font-bold mt-10 mb-4">⭐ Starred</h2>
     <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-700">
         <table class="min-w-full bg-gray-800 text-white text-sm rounded-lg overflow-hidden">
             <thead>
                 <tr class="bg-gray-900 text-yellow-300">
                     <th class="py-3 px-4 text-left">Name</th>
+                    <th class="py-3 px-4 text-left">Email</th>
+                    <th class="py-3 px-4 text-left">WhatsApp</th>
                     <th class="py-3 px-4 text-left">Message</th>
                     <th class="py-3 px-4 text-left">Time Left</th>
                 </tr>
@@ -210,6 +216,8 @@
                 {% for s in starred %}
                 <tr class="border-t border-gray-700">
                     <td class="py-2 px-4">{{ s.name }}</td>
+                    <td class="py-2 px-4">{{ s.email }}</td>
+                    <td class="py-2 px-4">{{ s.whatsapp }}</td>
                     <td class="py-2 px-4">{{ s.message }}</td>
                     <td class="py-2 px-4">Permanent</td>
                 </tr>
@@ -217,7 +225,7 @@
             </tbody>
         </table>
     </div>
-</div>
+    
 <div class="bg-gradient-to-r from-blue-500 to-green-500 p-6 rounded-lg mt-4">
     <h2 class="text-2xl font-bold text-white">YouTube Management</h2>
     <p class="text-white mt-2">Manage your YouTube videos here.</p>
