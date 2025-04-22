@@ -1,9 +1,14 @@
 from django.shortcuts import render, redirect,get_object_or_404
-from .forms import ExperienceForm ,ContactMessageForm, PortoForm, ProjectForm, ProjectMediaForm
+from .forms import ContactMessageForm, PortoForm, ProjectForm, ProjectMediaForm
 from .models import ContactMessage, PortoData, Project, ProjectMedia
-from .forms import ExperienceForm, EducationForm, SkillForm, CertificateForm, LanguageForm, VolunteeringForm
+# from .forms import ExperienceForm, EducationForm, SkillForm, CertificateForm, LanguageForm, VolunteeringForm
 from .models import Summary
 from .forms import SummaryForm
+from .models import Experience, Education
+from .forms import ExperienceForm, EducationForm
+from .models import Language, Volunteering, Skill
+from .forms import LanguageForm, VolunteeringForm, SkillForm
+
 
 def porto(request):
     # Get the latest PortoData or use defaults
@@ -39,6 +44,18 @@ def porto(request):
     })
 
 def dashboard(request):
+    language_form = LanguageForm()
+    languages = Language.objects.all()
+
+    volunteering_form = VolunteeringForm()
+    volunteerings = Volunteering.objects.all()
+
+    skill_form = SkillForm()
+    skills = Skill.objects.all()
+    education_form = EducationForm()
+    educations = Education.objects.all()
+    experience_form = ExperienceForm()
+    experiences = Experience.objects.all()
     project_form = ProjectForm()
     media_form = ProjectMediaForm()
     projects = Project.objects.all()
@@ -47,18 +64,52 @@ def dashboard(request):
     messages = ContactMessage.objects.filter(is_saved=False, is_starred=False)
     starred = ContactMessage.objects.filter(is_starred=True)
     saved = ContactMessage.objects.filter(is_saved=True)
+    porto_data = PortoData.objects.last()
+    name = porto_data.name if porto_data and porto_data.name else "No Name"
+    title = porto_data.title if porto_data and porto_data.title else "No Title"
+    photo_url = porto_data.photo.url if porto_data and porto_data.photo else 'images/photo_not_found.jpg'
+    is_uploaded_photo = bool(porto_data and porto_data.photo)
+    
     ContactMessage.objects.filter(
         is_saved=False,
         is_starred=False,
         timestamp__lt=timezone.now() - timedelta(days=30)
     ).delete()
     
+    if request.method == 'POST':
+        if 'language_submit' in request.POST:
+            language_form = LanguageForm(request.POST)
+            if language_form.is_valid():
+                language_form.save()
+                return redirect('dashboard')
+        elif 'volunteering_submit' in request.POST:
+            volunteering_form = VolunteeringForm(request.POST)
+            if volunteering_form.is_valid():
+                volunteering_form.save()
+                return redirect('dashboard')
+        elif 'skill_submit' in request.POST:
+            skill_form = SkillForm(request.POST)
+            if skill_form.is_valid():
+                skill_form.save()
+                return redirect('dashboard')
+        
+    if request.method == 'POST' and 'education_submit' in request.POST:
+        education_form = EducationForm(request.POST)
+        if education_form.is_valid():
+            education_form.save()
+            return redirect('dashboard')
 
+    if request.method == 'POST' and 'experience_submit' in request.POST:
+        experience_form = ExperienceForm(request.POST)
+        if experience_form.is_valid():
+            experience_form.save()
+            return redirect('dashboard')
+    
     if request.method == 'POST':
         project_form = ProjectForm(request.POST)
         media_files = request.FILES.getlist('file')  # Get all files uploaded under the 'file' field
         form = PortoForm(request.POST, request.FILES)
-
+        
         if project_form.is_valid():
             # Save the project
             project = project_form.save()
@@ -88,12 +139,20 @@ def dashboard(request):
         'starred': starred,
         'saved': saved,
         'summary': summary,
-        'education_form': EducationForm(),
-        'experience_form': ExperienceForm(),
-        'skill_form': SkillForm(),
-        'certificate_form': CertificateForm(),
-        'language_form': LanguageForm(),
-        'volunteering_form': VolunteeringForm(),
+        'name': name,
+        'title': title,
+        'photo_url': photo_url,
+        'is_uploaded_photo': is_uploaded_photo,
+        'experience_form': experience_form,
+        'experiences': experiences,
+        'education_form': education_form,
+        'educations': educations,
+        'language_form': language_form,
+        'languages': languages,
+        'volunteering_form': volunteering_form,
+        'volunteerings': volunteerings,
+        'skill_form': skill_form,
+        'skills': skills,
     })
 
 
@@ -121,70 +180,27 @@ def delete_message(request, pk):
     return redirect('dashboard')
 
 
-# from googleapiclient.discovery import build
-# from django.conf import settings
-# from .models import YouTubeVideo
-# from datetime import datetime
-
-# # Function to get YouTube API client
-# def get_youtube_client():
-#     return build('youtube', 'v3', developerKey=settings.AIzaSyA3Qk4xbc7B_RkpMWy2gygjkg4QsROEhfs)
-
-# Function to fetch videos from your YouTube channel
-# def fetch_youtube_videos():
-#     # youtube = get_youtube_client()
-#     request = youtube.search().list(
-#         part="snippet",
-#         channelId=settings.YOUTUBE_CHANNEL_ID,  # Replace with your actual channel ID
-#         maxResults=50,  # Adjust this number as needed
-#         order="date"
-#     )
-#     response = request.execute()
-    
-#     # Save videos to the database
-#     for item in response.get("items", []):
-#         video_id = item["id"]["videoId"]
-#         title = item["snippet"]["title"]
-#         description = item["snippet"]["description"]
-#         published_at = datetime.strptime(item["snippet"]["publishedAt"], "%Y-%m-%dT%H:%M:%SZ")
-#         thumbnail_url = item["snippet"]["thumbnails"]["high"]["url"]
-        
-#         # Check if the video is already saved in the database
-#         video, created = YouTubeVideo.objects.get_or_create(
-#             video_id=video_id,
-#             defaults={'title': title, 'description': description, 'published_at': published_at, 'thumbnail_url': thumbnail_url}
-#         )
-#         if not created:
-#             # Update existing video details
-#             video.title = title
-#             video.description = description
-#             video.published_at = published_at
-#             video.thumbnail_url = thumbnail_url
-#             video.save()
-
-
-# def youtube_view(request):
-#     # Fetch YouTube videos from the database (or update them if needed)
-#     fetch_youtube_videos()
-
-#     # Get all videos to display on the page
-#     videos = YouTubeVideo.objects.all().order_by('-published_at')
-
-#     return render(request, 'youtube/youtube_page.html', {
-#         'videos': videos
-#     })
-
 def cv(request):
-    from .models import Experience, Education, Skill, Certificate, Language, Volunteering, PortoData
+    # from .models import Experience, Education, Skill, Certificate, Language, Volunteering, 
+    from .models import PortoData
+    experiences = Experience.objects.all()
+    educations = Education.objects.all()
+    experiences = Experience.objects.all()
+    educations = Education.objects.all()
+    languages = Language.objects.all()
+    volunteerings = Volunteering.objects.all()
+    skills = Skill.objects.all()
+
+
     summary = PortoData.objects.last().summary if PortoData.objects.last() else "No summary available."
     return render(request, 'main/cv.html', {
         'summary': summary,
-        'experiences': Experience.objects.all(),
-        'educations': Education.objects.all(),
-        'skills': Skill.objects.all(),
-        'certificates': Certificate.objects.all(),
-        'languages': Language.objects.all(),
-        'volunteering': Volunteering.objects.all(),
+        'experiences': experiences,
+        'educations': educations,
+        'languages': languages,
+        'volunteerings': volunteerings,
+        'skills': skills,
+
     })
 
 
@@ -202,44 +218,3 @@ def edit_summary(request):
 
     return render(request, 'dashboard/edit_summary.html', {'form': form})
 
-def add_experience(request):
-    if request.method == 'POST':
-        form = ExperienceForm(request.POST)
-        if form.is_valid():
-            form.save()
-    return redirect('dashboard')  # or 'dashboard' if that's the name
-
-def add_education(request):
-    if request.method == 'POST':
-        form = EducationForm(request.POST)
-        if form.is_valid():
-            form.save()
-    return redirect('dashboard')
-
-def add_skill(request):
-    if request.method == 'POST':
-        form = SkillForm(request.POST)
-        if form.is_valid():
-            form.save()
-    return redirect('dashboard')
-
-def add_certificate(request):
-    if request.method == 'POST':
-        form = CertificateForm(request.POST)
-        if form.is_valid():
-            form.save()
-    return redirect('dashboard')
-
-def add_language(request):
-    if request.method == 'POST':
-        form = LanguageForm(request.POST)
-        if form.is_valid():
-            form.save()
-    return redirect('dashboard')
-
-def add_volunteering(request):
-    if request.method == 'POST':
-        form = VolunteeringForm(request.POST)
-        if form.is_valid():
-            form.save()
-    return redirect('dashboard')

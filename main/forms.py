@@ -1,7 +1,7 @@
 from django import forms
-from .models import PortoData, ContactMessage, Project, ProjectMedia
-from .models import Experience, Education, Skill, Certificate, Language, Volunteering
-from .models import Summary
+from .models import Experience, PortoData, ContactMessage, Project, ProjectMedia
+# from .models import Experience, Education, Skill, Certificate, Language, Volunteering
+from .models import Summary, Education
 
 
 class PortoForm(forms.ModelForm):
@@ -57,32 +57,89 @@ class SummaryForm(forms.ModelForm):
             }),
         }
 
+# class ExperienceForm(forms.ModelForm):
+#     class Meta:
+#         model = Experience
+#         fields = '__all__'
+
+# class EducationForm(forms.ModelForm):
+#     class Meta:
+#         model = Education
+#         fields = '__all__'
+
+# class SkillForm(forms.ModelForm):
+#     class Meta:
+#         model = Skill
+#         fields = '__all__'
+
+# class CertificateForm(forms.ModelForm):
+#     class Meta:
+#         model = Certificate
+#         fields = '__all__'
+
+# class LanguageForm(forms.ModelForm):
+#     class Meta:
+#         model = Language
+#         fields = '__all__'
+
+# class VolunteeringForm(forms.ModelForm):
+#     class Meta:
+#         model = Volunteering
+#         fields = '__all__'
+
+
+
 class ExperienceForm(forms.ModelForm):
     class Meta:
         model = Experience
-        fields = '__all__'
+        fields = ['position', 'company', 'start_date', 'end_date', 'description']
+        widgets = {
+            'position': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'company': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'start_date': forms.DateInput(attrs={'type': 'date', 'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'end_date': forms.DateInput(attrs={'type': 'date', 'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'description': forms.Textarea(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+        }
+
 
 class EducationForm(forms.ModelForm):
     class Meta:
         model = Education
-        fields = '__all__'
+        fields = ['name', 'institution', 'issue_date', 'specialization']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'institution': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'issue_date': forms.DateInput(attrs={'type': 'date', 'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'specialization': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+        }
 
-class SkillForm(forms.ModelForm):
-    class Meta:
-        model = Skill
-        fields = '__all__'
 
-class CertificateForm(forms.ModelForm):
-    class Meta:
-        model = Certificate
-        fields = '__all__'
+from .models import Language, Volunteering, Skill
 
 class LanguageForm(forms.ModelForm):
     class Meta:
         model = Language
-        fields = '__all__'
+        fields = ['language', 'level']
+        widgets = {
+            'language': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'level': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+        }
 
 class VolunteeringForm(forms.ModelForm):
     class Meta:
         model = Volunteering
-        fields = '__all__'
+        fields = ['activity', 'dates', 'institution']
+        widgets = {
+            'activity': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'dates': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'institution': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+        }
+
+class SkillForm(forms.ModelForm):
+    class Meta:
+        model = Skill
+        fields = ['skill', 'level']
+        widgets = {
+            'skill': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'level': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+        }

@@ -8,130 +8,139 @@
         <p class="text-gray-600 leading-relaxed">{{ summary.content }}</p>
     </section>
 
-    <!-- Experience Section -->
-    <section>
-        <h2 class="text-xl font-semibold mb-3 text-purple-600">Work Experience</h2>
-        <div class="overflow-x-auto rounded-xl shadow">
-            <table class="w-full table-auto border border-purple-400 text-sm text-left">
-                <thead class="bg-purple-100 text-purple-800">
-                    <tr>
-                        <th class="px-4 py-2">Company</th>
-                        <th class="px-4 py-2">Country</th>
-                        <th class="px-4 py-2">From</th>
-                        <th class="px-4 py-2">To</th>
-                        <th class="px-4 py-2">Role</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for exp in experiences %}
-                    <tr class="hover:bg-purple-50">
-                        <td class="px-4 py-2">{{ exp.company }}</td>
-                        <td class="px-4 py-2">{{ exp.country }}</td>
-                        <td class="px-4 py-2">{{ exp.start_date }}</td>
-                        <td class="px-4 py-2">{{ exp.end_date }}</td>
-                        <td class="px-4 py-2">{{ exp.role }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Education Section -->
-    <section>
-        <h2 class="text-xl font-semibold mb-3 text-green-600">Education</h2>
-        <div class="overflow-x-auto rounded-xl shadow">
-            <table class="w-full table-auto border border-green-400 text-sm text-left">
-                <thead class="bg-green-100 text-green-800">
-                    <tr>
-                        <th class="px-4 py-2">Institution</th>
-                        <th class="px-4 py-2">From</th>
-                        <th class="px-4 py-2">To</th>
-                        <th class="px-4 py-2">Field</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for edu in educations %}
-                    <tr class="hover:bg-green-50">
-                        <td class="px-4 py-2">{{ edu.institution }}</td>
-                        <td class="px-4 py-2">{{ edu.start_date }}</td>
-                        <td class="px-4 py-2">{{ edu.end_date }}</td>
-                        <td class="px-4 py-2">{{ edu.field }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Skills Section -->
-    <section>
-        <h2 class="text-xl font-semibold mb-3 text-yellow-600">Skills</h2>
-        <div class="overflow-x-auto rounded-xl shadow">
-            <table class="w-full table-auto border border-yellow-400 text-sm text-left">
-                <thead class="bg-yellow-100 text-yellow-800">
-                    <tr>
-                        <th class="px-4 py-2">Skill</th>
-                        <th class="px-4 py-2">Level</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for skill in skills %}
-                    <tr class="hover:bg-yellow-50">
-                        <td class="px-4 py-2">{{ skill.name }}</td>
-                        <td class="px-4 py-2">{{ skill.level }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Certificates Section -->
-    <section>
-        <h2 class="text-xl font-semibold mb-3 text-red-600">Certificates</h2>
-        <div class="overflow-x-auto rounded-xl shadow">
-            <table class="w-full table-auto border border-red-400 text-sm text-left">
-                <thead class="bg-red-100 text-red-800">
-                    <tr>
-                        <th class="px-4 py-2">Certificate</th>
-                        <th class="px-4 py-2">Date</th>
-                        <th class="px-4 py-2">Institution</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for cert in certificates %}
-                    <tr class="hover:bg-red-50">
-                        <td class="px-4 py-2">{{ cert.name }}</td>
-                        <td class="px-4 py-2">{{ cert.date }}</td>
-                        <td class="px-4 py-2">{{ cert.institution }}</td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </section>
-
-    <!-- Languages Section -->
-    <section>
-        <h2 class="text-xl font-semibold mb-3 text-blue-600">Languages</h2>
-        <ul class="list-disc ml-5 text-gray-700 space-y-1">
-            {% for lang in languages %}
-            <li>{{ lang.name }} — {{ lang.level }}</li>
-            {% endfor %}
-        </ul>
-    </section>
-
-    <!-- Volunteering Section -->
-    <section>
-        <h2 class="text-xl font-semibold mb-3 text-indigo-600">Volunteering</h2>
-        <ul class="list-disc ml-5 text-gray-700 space-y-1">
-            {% for vol in volunteering %}
-            <li>{{ vol.organization }} ({{ vol.role }}) — {{ vol.description }}</li>
-            {% endfor %}
-        </ul>
-    </section>
-
 </div>
+<section class="bg-gray-800 p-8 rounded-xl shadow-lg mt-10 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">💼 Experience</h2>
+
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Position</th>
+                <th class="py-2 px-4">Company</th>
+                <th class="py-2 px-4">Dates</th>
+                <th class="py-2 px-4">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for exp in experiences %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ exp.position }}</td>
+                <td class="py-2 px-4">{{ exp.company }}</td>
+                <td class="py-2 px-4">{{ exp.start_date }} - {{ exp.end_date|default:"Present" }}</td>
+                <td class="py-2 px-4">{{ exp.description }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-gray-400 py-4">No experience listed yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section class="bg-gray-800 p-8 rounded-xl shadow-lg mt-10 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🎓 Education & Certificates</h2>
+
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Name</th>
+                <th class="py-2 px-4">Institution</th>
+                <th class="py-2 px-4">Issue Date</th>
+                <th class="py-2 px-4">Specialization</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for edu in educations %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ edu.name }}</td>
+                <td class="py-2 px-4">{{ edu.institution }}</td>
+                <td class="py-2 px-4">{{ edu.issue_date }}</td>
+                <td class="py-2 px-4">{{ edu.specialization|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-gray-400 py-4">No education listed yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section class="bg-gray-800 p-8 rounded-xl shadow-lg mt-10 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🧠 Skills</h2>
+
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Skill</th>
+                <th class="py-2 px-4">Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in skills %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ s.skill }}</td>
+                <td class="py-2 px-4">{{ s.level }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="text-center text-gray-400 py-4">No skills listed yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="bg-gray-800 p-8 rounded-xl shadow-lg mt-10 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🤝 Volunteering Activities</h2>
+
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Activity</th>
+                <th class="py-2 px-4">Dates</th>
+                <th class="py-2 px-4">Institution</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in volunteerings %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ v.activity }}</td>
+                <td class="py-2 px-4">{{ v.dates }}</td>
+                <td class="py-2 px-4">{{ v.institution }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center text-gray-400 py-4">No volunteering activities listed yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
+<section class="bg-gray-800 p-8 rounded-xl shadow-lg mt-10 max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🗣 Languages</h2>
+
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Language</th>
+                <th class="py-2 px-4">Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for lang in languages %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ lang.language }}</td>
+                <td class="py-2 px-4">{{ lang.level }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="text-center text-gray-400 py-4">No languages listed yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+
 
 {% endblock %}

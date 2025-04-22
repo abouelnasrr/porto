@@ -12,12 +12,12 @@ urlpatterns = [
     path('delete/<int:pk>/', views.delete_message, name='delete_message'),
     # path('youtube/', views.youtube_view, name='youtube'),
     path('cv/', views.cv, name='cv'),
-    path('add-experience/', views.add_experience, name='add_experience'),
-    path('add-education/', views.add_education, name='add_education'),
-    path('add-skill/', views.add_skill, name='add_skill'),
-    path('add-certificate/', views.add_certificate, name='add_certificate'),
-    path('add-language/', views.add_language, name='add_language'),
-    path('add-volunteering/', views.add_volunteering, name='add_volunteering'),
+    # path('add-experience/', views.add_experience, name='add_experience'),
+    # path('add-education/', views.add_education, name='add_education'),
+    # path('add-skill/', views.add_skill, name='add_skill'),
+    # path('add-certificate/', views.add_certificate, name='add_certificate'),
+    # path('add-language/', views.add_language, name='add_language'),
+    # path('add-volunteering/', views.add_volunteering, name='add_volunteering'),
     path('edit-summary/', views.edit_summary, name='edit_summary'),
 
 

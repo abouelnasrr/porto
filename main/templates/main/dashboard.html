@@ -1,6 +1,19 @@
 {% extends "main/base.html" %} {% load project_filters %} {% block content %}
 <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-xl shadow-md mt-10 space-y-6 animate-fade-in">
     <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">Main Info</h2>
+    <!-- Display Current Info -->
+    <div class="bg-gray-700 p-4 rounded-lg shadow-inner text-white">
+        <h3 class="text-xl font-semibold mb-2 text-cyan-300">Current Info</h3>
+        <p><span class="font-bold">Name:</span> {{ name }}</p>
+        <p><span class="font-bold">Title:</span> {{ title }}</p>
+        <div class="mt-4">
+            <p class="font-bold mb-1">Uploaded Photo:</p>
+            {% if is_uploaded_photo %}
+            <img src="{{ photo_url }}" alt="Current Photo" class="max-w-xs rounded-lg shadow-md"> {% else %}
+            <p class="text-red-300">No photo uploaded.</p>
+            {% endif %}
+        </div>
+    </div>
 
     <form method="post" enctype="multipart/form-data" class="space-y-4">
         {% csrf_token %}
@@ -199,7 +212,7 @@
             </tbody>
         </table>
     </div>
-    
+
     <h2 class="text-2xl text-yellow-400 font-bold mt-10 mb-4">⭐ Starred</h2>
     <div class="overflow-x-auto rounded-lg shadow-lg border border-gray-700">
         <table class="min-w-full bg-gray-800 text-white text-sm rounded-lg overflow-hidden">
@@ -225,221 +238,292 @@
             </tbody>
         </table>
     </div>
-    
-<div class="bg-gradient-to-r from-blue-500 to-green-500 p-6 rounded-lg mt-4">
-    <h2 class="text-2xl font-bold text-white">YouTube Management</h2>
-    <p class="text-white mt-2">Manage your YouTube videos here.</p>
-</div>
 
-<!-- CV Management Section -->
-<section class="bg-gray-800 p-8 rounded-xl shadow-xl mt-12 text-white space-y-8">
-    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-700 pb-2">CV Management</h2>
-
-    <!-- Form Wrapper -->
-    <div class="grid md:grid-cols-2 gap-6">
-
-        <!-- Experience -->
-        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
-            <h3 class="text-xl font-semibold text-cyan-300">Add Experience</h3>
-            <form method="post" action="{% url 'add_experience' %}" class="space-y-3">
-                {% csrf_token %} {{ experience_form.as_p }}
-                <button onclick="toggleModal('experienceModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
-                    Add Experience
-                </button>
-            </form>
-        </div>
-
-        <!-- Education -->
-        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
-            <h3 class="text-xl font-semibold text-cyan-300">Add Education</h3>
-            <form method="post" action="{% url 'add_education' %}" class="space-y-3">
-                {% csrf_token %} {{ education_form.as_p }}
-                <button onclick="toggleModal('educationModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
-                    Add Education
-                </button>
-            </form>
-        </div>
-
-        <!-- Skill -->
-        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
-            <h3 class="text-xl font-semibold text-cyan-300">Add Skill</h3>
-            <form method="post" action="{% url 'add_skill' %}" class="space-y-3">
-                {% csrf_token %} {{ skill_form.as_p }}
-                <button onclick="toggleModal('skillModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
-                    Add Skill
-                </button>
-            </form>
-        </div>
-
-        <!-- Certificate -->
-        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
-            <h3 class="text-xl font-semibold text-cyan-300">Add Certificate</h3>
-            <form method="post" action="{% url 'add_certificate' %}" class="space-y-3">
-                {% csrf_token %} {{ certificate_form.as_p }}
-                <button onclick="toggleModal('certificateModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
-                    Add Certificate
-                </button>
-            </form>
-        </div>
-
-        <!-- Language -->
-        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
-            <h3 class="text-xl font-semibold text-cyan-300">Add Language</h3>
-            <form method="post" action="{% url 'add_language' %}" class="space-y-3">
-                {% csrf_token %} {{ language_form.as_p }}
-                <button onclick="toggleModal('languageModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
-                    Add Language
-                </button>
-            </form>
-        </div>
-
-        <!-- Volunteering -->
-        <div class="bg-gray-700 p-6 rounded-lg shadow space-y-4">
-            <h3 class="text-xl font-semibold text-cyan-300">Add Volunteering</h3>
-            <form method="post" action="{% url 'add_volunteering' %}" class="space-y-3">
-                {% csrf_token %} {{ volunteering_form.as_p }}
-                <button onclick="toggleModal('volunteeringModal')" type="submit" class="bg-cyan-600 hover:bg-cyan-700 text-white px-4 py-2 rounded w-full transition">
-                    Add Volunteering
-                </button>
-            </form>
-        </div>
-
+    <div class="bg-gradient-to-r from-blue-500 to-green-500 p-6 rounded-lg mt-4">
+        <h2 class="text-2xl font-bold text-white">YouTube Management</h2>
+        <p class="text-white mt-2">Manage your YouTube videos here.</p>
     </div>
-</section>
 
-<!-- Summary Section -->
-<section class="bg-gray-800 p-6 rounded-xl shadow-lg mt-10">
-    <h2 class="text-2xl font-bold text-cyan-400 mb-4">Edit Professional Summary</h2>
-    <form method="POST">
-        {% csrf_token %}
-        <textarea name="summary" rows="6" class="w-full p-4 bg-gray-700 text-white rounded-md">{{ summary.content }}</textarea>
-        <button type="submit" class="mt-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-6 py-2 rounded transition-all duration-300 shadow">
+
+    <!-- Summary Section -->
+    <section class="bg-gray-800 p-6 rounded-xl shadow-lg mt-10">
+        <h2 class="text-2xl font-bold text-cyan-400 mb-4">Edit Professional Summary</h2>
+        <form method="POST">
+            {% csrf_token %}
+            <textarea name="summary" rows="6" class="w-full p-4 bg-gray-700 text-white rounded-md">{{ summary.content }}</textarea>
+            <button type="submit" class="mt-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-6 py-2 rounded transition-all duration-300 shadow">
         Save Summary
       </button>
+        </form>
+    </section>
+    <script>
+        function toggleModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.toggle('hidden');
+        }
+
+        function openEditModal(projectId) {
+            const projectRow = document.querySelector(`[data-project*='"id":${projectId}]`);
+            const projectData = JSON.parse(projectRow.getAttribute('data-project'));
+
+            // Open the modal
+            document.getElementById('editProjectModal').classList.remove('hidden');
+
+            // Fill the modal form with the project data
+            document.getElementById('edit_project_id').value = projectData.id;
+            document.getElementById('edit_name').value = projectData.name;
+            document.getElementById('edit_description').value = projectData.description;
+            document.getElementById('edit_duration').value = projectData.duration;
+        }
+
+        function closeEditModal() {
+            document.getElementById('editProjectModal').classList.add('hidden');
+        }
+        document.querySelectorAll('.timer').forEach(function(span) {
+            const timestamp = new Date(span.dataset.timestamp);
+            const interval = setInterval(() => {
+                const now = new Date();
+                const expirationTime = new Date(timestamp.getTime() + 30 * 24 * 60 * 60 * 1000);
+                let diff = expirationTime - now;
+
+                if (diff <= 0) {
+                    span.textContent = "Expired";
+                    clearInterval(interval);
+                } else {
+                    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+                    const mins = Math.floor((diff / (1000 * 60)) % 60);
+                    const secs = Math.floor((diff / 1000) % 60);
+                    span.textContent = `${days}d ${hours}h ${mins}m ${secs}s`;
+                }
+            }, 1000);
+        });
+    </script>
+</div>
+<section class="bg-gray-800 p-8 mt-10 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🛠 Experience</h2>
+
+    <!-- Experience Form -->
+    <form method="post" class="space-y-4 mb-8">
+        {% csrf_token %} {{ experience_form.non_field_errors }}
+        <div>
+            <label class="block text-white font-medium mb-1">Position</label> {{ experience_form.position }}
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Company</label> {{ experience_form.company }}
+        </div>
+        <div class="flex gap-4">
+            <div class="w-1/2">
+                <label class="block text-white font-medium mb-1">Start Date</label> {{ experience_form.start_date }}
+            </div>
+            <div class="w-1/2">
+                <label class="block text-white font-medium mb-1">End Date</label> {{ experience_form.end_date }}
+            </div>
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Description</label> {{ experience_form.description }}
+        </div>
+        <button type="submit" name="experience_submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded transition">
+            Save Experience
+        </button>
     </form>
+
+    <!-- Current Experience Table -->
+    <h3 class="text-xl text-white font-semibold mb-2">Current Experiences</h3>
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Position</th>
+                <th class="py-2 px-4">Company</th>
+                <th class="py-2 px-4">Dates</th>
+                <th class="py-2 px-4">Description</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for exp in experiences %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ exp.position }}</td>
+                <td class="py-2 px-4">{{ exp.company }}</td>
+                <td class="py-2 px-4">{{ exp.start_date }} - {{ exp.end_date|default:"Present" }}</td>
+                <td class="py-2 px-4">{{ exp.description }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-gray-400 py-4">No experience added yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
 </section>
-<!-- Experience Modal -->
-<div id="experienceModal" class="hidden fixed inset-0 bg-black bg-opacity-60 z-50 flex items-center justify-center">
-    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-lg">
-        <h2 class="text-xl font-bold mb-4 text-purple-300">Add Experience</h2>
-        <form method="POST" action="{% url 'add_experience' %}">
-            {% csrf_token %} {{ experience_form.as_p }}
-            <div class="flex justify-end space-x-2 mt-4">
-                <button type="button" onclick="toggleModal('experienceModal')" class="px-4 py-2 rounded bg-gray-600 hover:bg-gray-700">Cancel</button>
-                <button type="submit" class="px-4 py-2 rounded bg-purple-600 hover:bg-purple-700">Add</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Add Education Modal -->
-<div id="educationModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
-    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-        <h2 class="text-xl font-bold mb-4 text-green-400">Add Education</h2>
-        <form method="POST" action="{% url 'add_education' %}">
-            {% csrf_token %} {{ education_form.as_p }}
-            <div class="flex justify-end gap-3 mt-4">
-                <button type="button" onclick="toggleModal('educationModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-green-600 hover:bg-green-700 rounded">Add</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Add Skill Modal -->
-<div id="skillModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
-    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-        <h2 class="text-xl font-bold mb-4 text-yellow-400">Add Skill</h2>
-        <form method="POST" action="{% url 'add_skill' %}">
-            {% csrf_token %} {{ skill_form.as_p }}
-            <div class="flex justify-end gap-3 mt-4">
-                <button type="button" onclick="toggleModal('skillModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-yellow-500 hover:bg-yellow-600 rounded">Add</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Add Certificate Modal -->
-<div id="certificateModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
-    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-        <h2 class="text-xl font-bold mb-4 text-red-400">Add Certificate</h2>
-        <form method="POST" action="{% url 'add_certificate' %}">
-            {% csrf_token %} {{ certificate_form.as_p }}
-            <div class="flex justify-end gap-3 mt-4">
-                <button type="button" onclick="toggleModal('certificateModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-red-500 hover:bg-red-600 rounded">Add</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Add Language Modal -->
-<div id="languageModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
-    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-        <h2 class="text-xl font-bold mb-4 text-blue-400">Add Language</h2>
-        <form method="POST" action="{% url 'add_language' %}">
-            {% csrf_token %} {{ language_form.as_p }}
-            <div class="flex justify-end gap-3 mt-4">
-                <button type="button" onclick="toggleModal('languageModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded">Add</button>
-            </div>
-        </form>
-    </div>
-</div>
-<!-- Add Volunteering Modal -->
-<div id="volunteeringModal" class="hidden fixed inset-0 bg-black bg-opacity-70 z-50 flex items-center justify-center">
-    <div class="bg-gray-900 text-white p-6 rounded-lg shadow-lg w-full max-w-xl">
-        <h2 class="text-xl font-bold mb-4 text-indigo-400">Add Volunteering</h2>
-        <form method="POST" action="{% url 'add_volunteering' %}">
-            {% csrf_token %} {{ volunteering_form.as_p }}
-            <div class="flex justify-end gap-3 mt-4">
-                <button type="button" onclick="toggleModal('volunteeringModal')" class="px-4 py-2 bg-gray-600 hover:bg-gray-700 rounded">Cancel</button>
-                <button type="submit" class="px-4 py-2 bg-indigo-500 hover:bg-indigo-600 rounded">Add</button>
-            </div>
-        </form>
-    </div>
-</div>
+<section class="bg-gray-800 p-8 mt-10 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🎓 Education & Certificates</h2>
 
+    <!-- Education Form -->
+    <form method="post" class="space-y-4 mb-8">
+        {% csrf_token %}
+        <input type="hidden" name="education_submit" value="1">
+        <div>
+            <label class="block text-white font-medium mb-1">Certificate Name</label> {{ education_form.name }}
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Institution</label> {{ education_form.institution }}
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Issue Date</label> {{ education_form.issue_date }}
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Specialization (optional)</label> {{ education_form.specialization }}
+        </div>
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded transition">
+            Save Education
+        </button>
+    </form>
 
-<script>
-    function toggleModal(id) {
-        const modal = document.getElementById(id);
-        modal.classList.toggle('hidden');
-    }
+    <!-- Current Education Table -->
+    <h3 class="text-xl text-white font-semibold mb-2">Current Records</h3>
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Name</th>
+                <th class="py-2 px-4">Institution</th>
+                <th class="py-2 px-4">Issue Date</th>
+                <th class="py-2 px-4">Specialization</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for edu in educations %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ edu.name }}</td>
+                <td class="py-2 px-4">{{ edu.institution }}</td>
+                <td class="py-2 px-4">{{ edu.issue_date }}</td>
+                <td class="py-2 px-4">{{ edu.specialization|default:"—" }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="4" class="text-center text-gray-400 py-4">No education records added yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section class="bg-gray-800 p-8 mt-10 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🗣 Languages</h2>
 
-    function openEditModal(projectId) {
-        const projectRow = document.querySelector(`[data-project*='"id":${projectId}]`);
-        const projectData = JSON.parse(projectRow.getAttribute('data-project'));
+    <form method="post" class="space-y-4 mb-8">
+        {% csrf_token %}
+        <input type="hidden" name="language_submit" value="1">
+        <div>
+            <label class="block text-white font-medium mb-1">Language</label> {{ language_form.language }}
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Level</label> {{ language_form.level }}
+        </div>
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded transition">
+            Save Language
+        </button>
+    </form>
 
-        // Open the modal
-        document.getElementById('editProjectModal').classList.remove('hidden');
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Language</th>
+                <th class="py-2 px-4">Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for l in languages %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ l.language }}</td>
+                <td class="py-2 px-4">{{ l.level }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="text-center text-gray-400 py-4">No languages added yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section class="bg-gray-800 p-8 mt-10 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🤝 Volunteering Activity</h2>
 
-        // Fill the modal form with the project data
-        document.getElementById('edit_project_id').value = projectData.id;
-        document.getElementById('edit_name').value = projectData.name;
-        document.getElementById('edit_description').value = projectData.description;
-        document.getElementById('edit_duration').value = projectData.duration;
-    }
+    <form method="post" class="space-y-4 mb-8">
+        {% csrf_token %}
+        <input type="hidden" name="volunteering_submit" value="1">
+        <div>
+            <label class="block text-white font-medium mb-1">Activity</label> {{ volunteering_form.activity }}
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Dates</label> {{ volunteering_form.dates }}
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Institution</label> {{ volunteering_form.institution }}
+        </div>
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded transition">
+            Save Volunteering
+        </button>
+    </form>
 
-    function closeEditModal() {
-        document.getElementById('editProjectModal').classList.add('hidden');
-    }
-    document.querySelectorAll('.timer').forEach(function(span) {
-        const timestamp = new Date(span.dataset.timestamp);
-        const interval = setInterval(() => {
-            const now = new Date();
-            const expirationTime = new Date(timestamp.getTime() + 30 * 24 * 60 * 60 * 1000);
-            let diff = expirationTime - now;
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Activity</th>
+                <th class="py-2 px-4">Dates</th>
+                <th class="py-2 px-4">Institution</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for v in volunteerings %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ v.activity }}</td>
+                <td class="py-2 px-4">{{ v.dates }}</td>
+                <td class="py-2 px-4">{{ v.institution }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="3" class="text-center text-gray-400 py-4">No volunteering activities yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
+<section class="bg-gray-800 p-8 mt-10 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">🧠 Skills</h2>
 
-            if (diff <= 0) {
-                span.textContent = "Expired";
-                clearInterval(interval);
-            } else {
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-                const mins = Math.floor((diff / (1000 * 60)) % 60);
-                const secs = Math.floor((diff / 1000) % 60);
-                span.textContent = `${days}d ${hours}h ${mins}m ${secs}s`;
-            }
-        }, 1000);
-    });
-</script>
+    <form method="post" class="space-y-4 mb-8">
+        {% csrf_token %}
+        <input type="hidden" name="skill_submit" value="1">
+        <div>
+            <label class="block text-white font-medium mb-1">Skill</label> {{ skill_form.skill }}
+        </div>
+        <div>
+            <label class="block text-white font-medium mb-1">Level</label> {{ skill_form.level }}
+        </div>
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-4 rounded transition">
+            Save Skill
+        </button>
+    </form>
+
+    <table class="w-full text-white bg-gray-900 rounded-lg overflow-hidden">
+        <thead class="bg-gray-700 text-cyan-300">
+            <tr>
+                <th class="py-2 px-4">Skill</th>
+                <th class="py-2 px-4">Level</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for s in skills %}
+            <tr class="border-t border-gray-600">
+                <td class="py-2 px-4">{{ s.skill }}</td>
+                <td class="py-2 px-4">{{ s.level }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+                <td colspan="2" class="text-center text-gray-400 py-4">No skills added yet.</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</section>
 
 {% endblock %}
