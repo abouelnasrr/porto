@@ -1,7 +1,7 @@
 from django import forms
 from .models import Experience, PortoData, ContactMessage, Project, ProjectMedia
 # from .models import Experience, Education, Skill, Certificate, Language, Volunteering
-from .models import Summary, Education
+from .models import  Education
 
 
 class PortoForm(forms.ModelForm):
@@ -45,17 +45,17 @@ class ProjectMediaForm(forms.ModelForm):
         }
 
 
-class SummaryForm(forms.ModelForm):
-    class Meta:
-        model = Summary
-        fields = ['content']
-        widgets = {
-            'content': forms.Textarea(attrs={
-                'class': 'w-full p-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring focus:border-blue-300',
-                'rows': 6,
-                'placeholder': 'Write a short professional summary...'
-            }),
-        }
+# class SummaryForm(forms.ModelForm):
+#     class Meta:
+#         model = Summary
+#         fields = ['content']
+#         widgets = {
+#             'content': forms.Textarea(attrs={
+#                 'class': 'w-full p-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring focus:border-blue-300',
+#                 'rows': 6,
+#                 'placeholder': 'Write a short professional summary...'
+#             }),
+#         }
 
 # class ExperienceForm(forms.ModelForm):
 #     class Meta:
@@ -142,4 +142,24 @@ class SkillForm(forms.ModelForm):
         widgets = {
             'skill': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
             'level': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+        }
+
+
+from .models import YouTubeIntro, YouTubeVideo
+
+class YouTubeIntroForm(forms.ModelForm):
+    class Meta:
+        model = YouTubeIntro
+        fields = ['content']
+        widgets = {
+            'content': forms.Textarea(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white', 'rows': 4})
+        }
+
+class YouTubeVideoForm(forms.ModelForm):
+    class Meta:
+        model = YouTubeVideo
+        fields = ['title', 'url']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'url': forms.URLInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
         }

@@ -92,12 +92,12 @@ class SavedMessage(models.Model):
     def __str__(self):
         return f"{self.name} ({self.email})"
     
-class YouTubeVideo(models.Model):
-    title = models.CharField(max_length=255)
-    description = models.TextField()
-    video_id = models.CharField(max_length=255, unique=True)
-    published_at = models.DateTimeField()
-    thumbnail_url = models.URLField()
+# class YouTubeVideo(models.Model):
+#     title = models.CharField(max_length=255)
+#     description = models.TextField()
+#     video_id = models.CharField(max_length=255, unique=True)
+#     published_at = models.DateTimeField()
+#     thumbnail_url = models.URLField()
 
     def __str__(self):
         return self.title
@@ -133,11 +133,11 @@ class YouTubeVideo(models.Model):
 #     role = models.CharField(max_length=100)
 #     description = models.TextField()
 
-class Summary(models.Model):
-    content = models.TextField()
+# class Summary(models.Model):
+#     content = models.TextField()
 
-    def __str__(self):
-        return self.content[:50]  # First 50 chars for admin display
+#     def __str__(self):
+#         return self.content[:50]  # First 50 chars for admin display
 
 class Experience(models.Model):
     position = models.CharField(max_length=100)
@@ -179,3 +179,16 @@ class Skill(models.Model):
 
     def __str__(self):
         return f"{self.skill} ({self.level})"
+
+class YouTubeIntro(models.Model):
+    content = models.TextField()
+
+    def __str__(self):
+        return "YouTube Intro"
+
+class YouTubeVideo(models.Model):
+    title = models.CharField(max_length=200)
+    url = models.URLField()
+
+    def __str__(self):
+        return self.title

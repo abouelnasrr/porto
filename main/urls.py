@@ -10,7 +10,7 @@ urlpatterns = [
     path('save/<int:pk>/', views.save_message, name='save_message'),
     path('star/<int:pk>/', views.star_message, name='star_message'),
     path('delete/<int:pk>/', views.delete_message, name='delete_message'),
-    # path('youtube/', views.youtube_view, name='youtube'),
+    path('youtube/', views.youtube, name='youtube'),
     path('cv/', views.cv, name='cv'),
     # path('add-experience/', views.add_experience, name='add_experience'),
     # path('add-education/', views.add_education, name='add_education'),
@@ -19,6 +19,7 @@ urlpatterns = [
     # path('add-language/', views.add_language, name='add_language'),
     # path('add-volunteering/', views.add_volunteering, name='add_volunteering'),
     # path('edit-summary/', views.edit_summary, name='edit_summary'),
+    path('delete-video/<int:pk>/', views.delete_video, name='delete_video'),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

@@ -1,14 +1,12 @@
 from django.shortcuts import render, redirect,get_object_or_404
 from .forms import ContactMessageForm, PortoForm, ProjectForm, ProjectMediaForm
 from .models import ContactMessage, PortoData, Project, ProjectMedia
-# from .forms import ExperienceForm, EducationForm, SkillForm, CertificateForm, LanguageForm, VolunteeringForm
-from .models import Summary
-from .forms import SummaryForm
 from .models import Experience, Education
 from .forms import ExperienceForm, EducationForm
 from .models import Language, Volunteering, Skill
 from .forms import LanguageForm, VolunteeringForm, SkillForm
-
+from .models import YouTubeIntro, YouTubeVideo
+from .forms import YouTubeIntroForm, YouTubeVideoForm
 
 def porto(request):
     # Get the latest PortoData or use defaults
@@ -44,6 +42,10 @@ def porto(request):
     })
 
 def dashboard(request):
+    youtube_intro, _ = YouTubeIntro.objects.get_or_create(pk=1)
+    youtube_intro_form = YouTubeIntroForm(request.POST or None, instance=youtube_intro)
+    youtube_video_form = YouTubeVideoForm()
+    youtube_videos = YouTubeVideo.objects.all()
     language_form = LanguageForm()
     languages = Language.objects.all()
 
@@ -77,6 +79,15 @@ def dashboard(request):
     ).delete()
     
     if request.method == 'POST':
+        if 'save_intro' in request.POST and youtube_intro_form.is_valid():
+            youtube_intro_form.save()
+            return redirect('dashboard')
+
+        if 'add_video' in request.POST:
+            youtube_video_form = YouTubeVideoForm(request.POST)
+            if youtube_video_form.is_valid():
+                youtube_video_form.save()
+                return redirect('dashboard')
         if 'language_submit' in request.POST:
             language_form = LanguageForm(request.POST)
             if language_form.is_valid():
@@ -125,11 +136,6 @@ def dashboard(request):
             return redirect('dashboard')  # Redirect to Porto page after save
     else:
         form = PortoForm()
-    # summary, created = Summary.objects.get_or_create(pk=1)
-    # if request.method == 'POST' and 'summary' in request.POST:
-        # summary.content = request.POST.get('summary')
-        # summary.save()
-        # return redirect('dashboard')
     return render(request, 'main/dashboard.html', {
         'form': form,
         'project_form': project_form,
@@ -153,6 +159,9 @@ def dashboard(request):
         'volunteerings': volunteerings,
         'skill_form': skill_form,
         'skills': skills,
+        'youtube_intro_form': youtube_intro_form,
+        'youtube_video_form': youtube_video_form,
+        'youtube_videos': youtube_videos,
     })
 
 
@@ -181,12 +190,9 @@ def delete_message(request, pk):
 
 
 def cv(request):
-    # from .models import Experience, Education, Skill, Certificate, Language, Volunteering, 
     from .models import PortoData
     experiences = Experience.objects.all()
     educations = Education.objects.all()
-    # experiences = Experience.objects.all()
-    # educations = Education.objects.all()
     languages = Language.objects.all()
     volunteerings = Volunteering.objects.all()
     skills = Skill.objects.all()
@@ -204,17 +210,17 @@ def cv(request):
     })
 
 
+def youtube(request):
+    intro = YouTubeIntro.objects.first()
+    videos = YouTubeVideo.objects.all()
+    return render(request, 'main/youtube.html', {
+        'intro': intro,
+        'videos': videos
+    })
+from django.shortcuts import get_object_or_404
 
-# def edit_summary(request):
-#     summary, _ = Summary.objects.get_or_create(pk=1)
-
-#     if request.method == 'POST':
-#         form = SummaryForm(request.POST, instance=summary)
-#         if form.is_valid():
-#             form.save()
-#             return redirect('edit_summary')  # redirect to itself
-#     else:
-#         form = SummaryForm(instance=summary)
-
-#     return render(request, 'dashboard/edit_summary.html', {'form': form})
-
+def delete_video(request, pk):
+    if request.method == 'POST':
+        video = get_object_or_404(YouTubeVideo, pk=pk)
+        video.delete()
+    return redirect('dashboard')
