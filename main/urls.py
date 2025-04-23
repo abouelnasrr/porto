@@ -18,7 +18,7 @@ urlpatterns = [
     # path('add-certificate/', views.add_certificate, name='add_certificate'),
     # path('add-language/', views.add_language, name='add_language'),
     # path('add-volunteering/', views.add_volunteering, name='add_volunteering'),
-    path('edit-summary/', views.edit_summary, name='edit_summary'),
+    # path('edit-summary/', views.edit_summary, name='edit_summary'),
 
 
 ]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

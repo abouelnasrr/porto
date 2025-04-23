@@ -239,23 +239,6 @@
         </table>
     </div>
 
-    <div class="bg-gradient-to-r from-blue-500 to-green-500 p-6 rounded-lg mt-4">
-        <h2 class="text-2xl font-bold text-white">YouTube Management</h2>
-        <p class="text-white mt-2">Manage your YouTube videos here.</p>
-    </div>
-
-
-    <!-- Summary Section -->
-    <section class="bg-gray-800 p-6 rounded-xl shadow-lg mt-10">
-        <h2 class="text-2xl font-bold text-cyan-400 mb-4">Edit Professional Summary</h2>
-        <form method="POST">
-            {% csrf_token %}
-            <textarea name="summary" rows="6" class="w-full p-4 bg-gray-700 text-white rounded-md">{{ summary.content }}</textarea>
-            <button type="submit" class="mt-4 bg-cyan-500 hover:bg-cyan-600 text-white font-semibold px-6 py-2 rounded transition-all duration-300 shadow">
-        Save Summary
-      </button>
-        </form>
-    </section>
     <script>
         function toggleModal(id) {
             const modal = document.getElementById(id);

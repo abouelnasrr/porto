@@ -125,11 +125,11 @@ def dashboard(request):
             return redirect('dashboard')  # Redirect to Porto page after save
     else:
         form = PortoForm()
-    summary, created = Summary.objects.get_or_create(pk=1)
-    if request.method == 'POST' and 'summary' in request.POST:
-        summary.content = request.POST.get('summary')
-        summary.save()
-        return redirect('dashboard')
+    # summary, created = Summary.objects.get_or_create(pk=1)
+    # if request.method == 'POST' and 'summary' in request.POST:
+        # summary.content = request.POST.get('summary')
+        # summary.save()
+        # return redirect('dashboard')
     return render(request, 'main/dashboard.html', {
         'form': form,
         'project_form': project_form,
@@ -138,7 +138,7 @@ def dashboard(request):
         'messages': messages,
         'starred': starred,
         'saved': saved,
-        'summary': summary,
+        # 'summary': summary,
         'name': name,
         'title': title,
         'photo_url': photo_url,
@@ -185,8 +185,8 @@ def cv(request):
     from .models import PortoData
     experiences = Experience.objects.all()
     educations = Education.objects.all()
-    experiences = Experience.objects.all()
-    educations = Education.objects.all()
+    # experiences = Experience.objects.all()
+    # educations = Education.objects.all()
     languages = Language.objects.all()
     volunteerings = Volunteering.objects.all()
     skills = Skill.objects.all()
@@ -194,7 +194,7 @@ def cv(request):
 
     summary = PortoData.objects.last().summary if PortoData.objects.last() else "No summary available."
     return render(request, 'main/cv.html', {
-        'summary': summary,
+        # 'summary': summary,
         'experiences': experiences,
         'educations': educations,
         'languages': languages,
@@ -205,16 +205,16 @@ def cv(request):
 
 
 
-def edit_summary(request):
-    summary, _ = Summary.objects.get_or_create(pk=1)
+# def edit_summary(request):
+#     summary, _ = Summary.objects.get_or_create(pk=1)
 
-    if request.method == 'POST':
-        form = SummaryForm(request.POST, instance=summary)
-        if form.is_valid():
-            form.save()
-            return redirect('edit_summary')  # redirect to itself
-    else:
-        form = SummaryForm(instance=summary)
+#     if request.method == 'POST':
+#         form = SummaryForm(request.POST, instance=summary)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('edit_summary')  # redirect to itself
+#     else:
+#         form = SummaryForm(instance=summary)
 
-    return render(request, 'dashboard/edit_summary.html', {'form': form})
+#     return render(request, 'dashboard/edit_summary.html', {'form': form})
 
