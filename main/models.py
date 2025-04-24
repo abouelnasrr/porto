@@ -92,52 +92,9 @@ class SavedMessage(models.Model):
     def __str__(self):
         return f"{self.name} ({self.email})"
     
-# class YouTubeVideo(models.Model):
-#     title = models.CharField(max_length=255)
-#     description = models.TextField()
-#     video_id = models.CharField(max_length=255, unique=True)
-#     published_at = models.DateTimeField()
-#     thumbnail_url = models.URLField()
-
     def __str__(self):
         return self.title
     
-# class Experience(models.Model):
-#     company = models.CharField(max_length=100)
-#     country = models.CharField(max_length=100)
-#     start_date = models.DateField()
-#     end_date = models.DateField()
-#     role = models.CharField(max_length=100)
-
-# class Education(models.Model):
-#     institution = models.CharField(max_length=100)
-#     start_date = models.DateField()
-#     end_date = models.DateField()
-#     field = models.CharField(max_length=100)
-
-# class Skill(models.Model):
-#     name = models.CharField(max_length=100)
-#     level = models.CharField(max_length=50)
-
-# class Certificate(models.Model):
-#     name = models.CharField(max_length=100)
-#     date = models.DateField()
-#     institution = models.CharField(max_length=100)
-
-# class Language(models.Model):
-#     name = models.CharField(max_length=100)
-#     level = models.CharField(max_length=50)
-
-# class Volunteering(models.Model):
-#     organization = models.CharField(max_length=100)
-#     role = models.CharField(max_length=100)
-#     description = models.TextField()
-
-# class Summary(models.Model):
-#     content = models.TextField()
-
-#     def __str__(self):
-#         return self.content[:50]  # First 50 chars for admin display
 
 class Experience(models.Model):
     position = models.CharField(max_length=100)
@@ -192,3 +149,12 @@ class YouTubeVideo(models.Model):
 
     def __str__(self):
         return self.title
+    
+class DashboardSecurity(models.Model):
+    username = models.CharField(max_length=100)
+    pin_code = models.CharField(max_length=10)
+    nt_code = models.CharField(max_length=100)
+    best_bro_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return "Dashboard Security Credentials"

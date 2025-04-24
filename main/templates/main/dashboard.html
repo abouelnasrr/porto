@@ -1,4 +1,11 @@
 {% extends "main/base.html" %} {% load project_filters %} {% block content %}
+<form action="{% url 'logout_auth' %}" method="post" class="inline">
+    {% csrf_token %}
+    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white py-1 px-4 rounded text-sm">
+        🚪 Logout
+    </button>
+</form>
+
 <div class="max-w-2xl mx-auto bg-gray-800 p-8 rounded-xl shadow-md mt-10 space-y-6 animate-fade-in">
     <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">Main Info</h2>
     <!-- Display Current Info -->
@@ -37,7 +44,16 @@
         </button>
     </form>
 </div>
-
+<section class="bg-gray-800 p-6 mt-10 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-4 border-b border-gray-600 pb-2">📄 CV Summary</h2>
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <textarea name="summary" rows="5" class="w-full p-3 rounded bg-gray-700 text-white" placeholder="Enter your professional summary...">{{ porto_data.summary }}</textarea>
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-6 rounded transition">
+            Save Summary
+        </button>
+    </form>
+</section>
 <!-- Add New Project Section -->
 <section class="bg-gray-800 py-10 mt-10 rounded-lg shadow-lg">
     <div class="max-w-4xl mx-auto px-4">
@@ -562,6 +578,22 @@
 </section>
 
 
+<section class="bg-gray-800 p-6 mt-10 rounded-xl shadow-lg">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-4 border-b border-gray-600 pb-2">🔐 Dashboard Access Credentials</h2>
+    <form method="POST" class="space-y-4">
+        {% csrf_token %}
+        <input type="hidden" name="save_security" value="1"> {{ security_form.as_p }}
+        <button type="submit" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-6 rounded">
+            Save Credentials
+        </button>
+    </form>
+</section>
+<form action="{% url 'logout_auth' %}" method="post" class="inline">
+    {% csrf_token %}
+    <button type="submit" class="bg-red-600 hover:bg-red-700 text-white py-1 px-4 rounded text-sm">
+        🚪 Logout
+    </button>
+</form>
 
 
 {% endblock %}

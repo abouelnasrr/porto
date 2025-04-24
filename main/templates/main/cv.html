@@ -1,5 +1,58 @@
 {% extends 'main/base.html' %} {% block content %}
 
+<section class="bg-gray-800 p-6 mt-10 rounded-xl shadow-lg max-w-4xl mx-auto">
+    <h2 class="text-3xl font-bold text-cyan-400 mb-4 border-b border-gray-600 pb-2">📝 Summary</h2>
+    <p class="text-white text-lg leading-relaxed">{{ summary|linebreaks }}</p>
+</section>
+
+<div id="printModal" class="hidden fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center items-start overflow-auto pt-10">
+    <div id="printArea" class="bg-white text-black p-6 rounded-lg w-full max-w-4xl shadow-xl">
+        <button onclick="closePrintModal()" class="float-right text-xl text-black font-bold mb-4">×</button>
+
+        <h2 class="text-2xl font-bold mb-4">📝 Summary</h2>
+        <p>{{ summary|linebreaks }}</p>
+
+        <hr class="my-4">
+
+        <h2 class="text-2xl font-bold mb-4">💼 Experience</h2>
+        {% for exp in experiences %}
+        <p><strong>{{ exp.position }}</strong> at {{ exp.company }} ({{ exp.start_date }} to {{ exp.end_date }})</p>
+        <p class="mb-3">{{ exp.description }}</p>
+        {% endfor %}
+
+        <h2 class="text-2xl font-bold mt-6 mb-4">🎓 Education</h2>
+        {% for edu in educations %}
+        <p>{{ edu.name }} - {{ edu.institution }} ({{ edu.issue_date }})</p>
+        {% if edu.specialization %}
+        <p>Specialization: {{ edu.specialization }}</p>{% endif %} {% endfor %}
+
+        <h2 class="text-2xl font-bold mt-6 mb-4">🗣 Languages</h2>
+        {% for lang in languages %}
+        <p>{{ lang.language }} - {{ lang.level }}</p>
+        {% endfor %}
+
+        <h2 class="text-2xl font-bold mt-6 mb-4">🤝 Volunteering</h2>
+        {% for v in volunteerings %}
+        <p>{{ v.activity }} at {{ v.institution }} ({{ v.dates }})</p>
+        {% endfor %}
+
+        <h2 class="text-2xl font-bold mt-6 mb-4">🧠 Skills</h2>
+        {% for s in skills %}
+        <p>{{ s.skill }} - {{ s.level }}</p>
+        {% endfor %}
+
+        <h2 class="text-2xl font-bold mt-6 mb-4">📞 Contact</h2>
+        <p>Email: your@email.com</p>
+        <p>Phone: +123456789</p>
+        <p>Instagram: @yourusername</p>
+
+        <div class="text-center mt-8">
+            <button onclick="printDiv()" class="bg-green-600 hover:bg-green-700 text-white font-semibold py-2 px-6 rounded">
+                🖨 Print Me
+            </button>
+        </div>
+    </div>
+</div>
 
 <section class="bg-gray-800 p-8 rounded-xl shadow-lg mt-10 max-w-4xl mx-auto">
     <h2 class="text-3xl font-bold text-cyan-400 mb-6 border-b border-gray-600 pb-2">💼 Experience</h2>
@@ -133,6 +186,31 @@
         </tbody>
     </table>
 </section>
+<div class="text-center my-6">
+    <button onclick="openPrintModal()" class="bg-cyan-500 hover:bg-cyan-600 text-white font-semibold py-2 px-6 rounded transition">
+        🖨 Print CV
+    </button>
+</div>
+<script>
+    function openPrintModal() {
+        document.getElementById("printModal").classList.remove("hidden");
+    }
 
+    function closePrintModal() {
+        document.getElementById("printModal").classList.add("hidden");
+    }
+
+    function printDiv() {
+        let printContent = document.getElementById("printArea").innerHTML;
+        let win = window.open('', '', 'height=800,width=1000');
+        win.document.write('<html><head><title>Print CV</title>');
+        win.document.write('<style>body{font-family:sans-serif;padding:20px;} h2{margin-top:1.5rem;}</style>');
+        win.document.write('</head><body>');
+        win.document.write(printContent);
+        win.document.write('</body></html>');
+        win.document.close();
+        win.print();
+    }
+</script>
 
 {% endblock %}

@@ -45,49 +45,6 @@ class ProjectMediaForm(forms.ModelForm):
         }
 
 
-# class SummaryForm(forms.ModelForm):
-#     class Meta:
-#         model = Summary
-#         fields = ['content']
-#         widgets = {
-#             'content': forms.Textarea(attrs={
-#                 'class': 'w-full p-4 rounded-lg border border-gray-300 shadow-sm focus:outline-none focus:ring focus:border-blue-300',
-#                 'rows': 6,
-#                 'placeholder': 'Write a short professional summary...'
-#             }),
-#         }
-
-# class ExperienceForm(forms.ModelForm):
-#     class Meta:
-#         model = Experience
-#         fields = '__all__'
-
-# class EducationForm(forms.ModelForm):
-#     class Meta:
-#         model = Education
-#         fields = '__all__'
-
-# class SkillForm(forms.ModelForm):
-#     class Meta:
-#         model = Skill
-#         fields = '__all__'
-
-# class CertificateForm(forms.ModelForm):
-#     class Meta:
-#         model = Certificate
-#         fields = '__all__'
-
-# class LanguageForm(forms.ModelForm):
-#     class Meta:
-#         model = Language
-#         fields = '__all__'
-
-# class VolunteeringForm(forms.ModelForm):
-#     class Meta:
-#         model = Volunteering
-#         fields = '__all__'
-
-
 
 class ExperienceForm(forms.ModelForm):
     class Meta:
@@ -162,4 +119,17 @@ class YouTubeVideoForm(forms.ModelForm):
         widgets = {
             'title': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
             'url': forms.URLInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+        }
+
+from .models import DashboardSecurity
+
+class DashboardSecurityForm(forms.ModelForm):
+    class Meta:
+        model = DashboardSecurity
+        fields = ['username', 'pin_code', 'nt_code', 'best_bro_name']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'pin_code': forms.PasswordInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'nt_code': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
+            'best_bro_name': forms.TextInput(attrs={'class': 'w-full p-2 rounded bg-gray-700 text-white'}),
         }

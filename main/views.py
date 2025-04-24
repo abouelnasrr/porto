@@ -7,6 +7,8 @@ from .models import Language, Volunteering, Skill
 from .forms import LanguageForm, VolunteeringForm, SkillForm
 from .models import YouTubeIntro, YouTubeVideo
 from .forms import YouTubeIntroForm, YouTubeVideoForm
+from .models import DashboardSecurity
+from .forms import DashboardSecurityForm
 
 def porto(request):
     # Get the latest PortoData or use defaults
@@ -42,6 +44,9 @@ def porto(request):
     })
 
 def dashboard(request):
+    if not request.session.get('step3_passed'):
+        return redirect('auth_login')
+
     youtube_intro, _ = YouTubeIntro.objects.get_or_create(pk=1)
     youtube_intro_form = YouTubeIntroForm(request.POST or None, instance=youtube_intro)
     youtube_video_form = YouTubeVideoForm()
@@ -51,6 +56,8 @@ def dashboard(request):
 
     volunteering_form = VolunteeringForm()
     volunteerings = Volunteering.objects.all()
+    security, _ = DashboardSecurity.objects.get_or_create(pk=1)
+    security_form = DashboardSecurityForm(request.POST or None, instance=security)
 
     skill_form = SkillForm()
     skills = Skill.objects.all()
@@ -71,13 +78,19 @@ def dashboard(request):
     title = porto_data.title if porto_data and porto_data.title else "No Title"
     photo_url = porto_data.photo.url if porto_data and porto_data.photo else 'images/photo_not_found.jpg'
     is_uploaded_photo = bool(porto_data and porto_data.photo)
-    
+    summary = PortoData.objects.last().summary if PortoData.objects.last() else "No summary available."
+
     ContactMessage.objects.filter(
         is_saved=False,
         is_starred=False,
         timestamp__lt=timezone.now() - timedelta(days=30)
     ).delete()
     
+    if request.method == 'POST' and 'save_security' in request.POST:
+        if security_form.is_valid():
+            security_form.save()
+            return redirect('dashboard')
+
     if request.method == 'POST':
         if 'save_intro' in request.POST and youtube_intro_form.is_valid():
             youtube_intro_form.save()
@@ -115,7 +128,11 @@ def dashboard(request):
         if experience_form.is_valid():
             experience_form.save()
             return redirect('dashboard')
-    
+    if request.method == 'POST' and 'summary' in request.POST:
+        if porto_data:
+            porto_data.summary = request.POST.get('summary')
+            porto_data.save()
+        return redirect('dashboard')
     if request.method == 'POST':
         project_form = ProjectForm(request.POST)
         media_files = request.FILES.getlist('file')  # Get all files uploaded under the 'file' field
@@ -137,6 +154,8 @@ def dashboard(request):
     else:
         form = PortoForm()
     return render(request, 'main/dashboard.html', {
+        'summary': porto_data.summary if porto_data else "",
+        'porto_data': porto_data,
         'form': form,
         'project_form': project_form,
         'media_form': media_form,
@@ -144,7 +163,7 @@ def dashboard(request):
         'messages': messages,
         'starred': starred,
         'saved': saved,
-        # 'summary': summary,
+        'summary': summary,
         'name': name,
         'title': title,
         'photo_url': photo_url,
@@ -162,6 +181,8 @@ def dashboard(request):
         'youtube_intro_form': youtube_intro_form,
         'youtube_video_form': youtube_video_form,
         'youtube_videos': youtube_videos,
+        'security_form': security_form,
+
     })
 
 
@@ -200,7 +221,7 @@ def cv(request):
 
     summary = PortoData.objects.last().summary if PortoData.objects.last() else "No summary available."
     return render(request, 'main/cv.html', {
-        # 'summary': summary,
+        'summary': summary,
         'experiences': experiences,
         'educations': educations,
         'languages': languages,
@@ -224,3 +245,54 @@ def delete_video(request, pk):
         video = get_object_or_404(YouTubeVideo, pk=pk)
         video.delete()
     return redirect('dashboard')
+
+from django.shortcuts import render, redirect
+from .models import DashboardSecurity
+
+def auth_login(request):
+    if request.method == 'POST':
+        user = request.POST.get('username')
+        pin = request.POST.get('pin_code')
+        creds = DashboardSecurity.objects.first()
+        if creds and user == creds.username and pin == creds.pin_code:
+            request.session['step1_passed'] = True
+            return redirect('auth_nt')
+        else:
+            return render(request, 'main/auth_login.html', {'error': 'Invalid credentials'})
+    return render(request, 'main/auth_login.html')
+
+
+def auth_nt(request):
+    if not request.session.get('step1_passed'):
+        return redirect('auth_login')
+    
+    if request.method == 'POST':
+        nt = request.POST.get('nt_code')
+        creds = DashboardSecurity.objects.first()
+        if creds and nt == creds.nt_code:
+            request.session['step2_passed'] = True
+            return redirect('auth_bro')
+        else:
+            return render(request, 'main/auth_nt.html', {'error': 'Wrong NT code'})
+    return render(request, 'main/auth_nt.html')
+
+
+def auth_bro(request):
+    if not request.session.get('step2_passed'):
+        return redirect('auth_nt')
+    
+    if request.method == 'POST':
+        bro = request.POST.get('bro_name')
+        creds = DashboardSecurity.objects.first()
+        if creds and bro == creds.best_bro_name:
+            request.session['step3_passed'] = True
+            return redirect('dashboard')
+        else:
+            return render(request, 'main/auth_bro.html', {'error': 'Wrong answer'})
+    return render(request, 'main/auth_bro.html')
+
+from django.shortcuts import redirect
+
+def logout_auth(request):
+    request.session.flush()  # clears all session data
+    return redirect('auth_login')  # change this if your login URL name is different

@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %} {% block content %}
+
+<section class="bg-gray-800 p-10 rounded-lg max-w-md mx-auto mt-20 text-white">
+    <h2 class="text-2xl font-bold text-cyan-400 mb-6">Step 2: NT Code</h2>
+    {% if error %}
+    <p class="text-red-400 mb-4">{{ error }}</p>{% endif %}
+    <form method="POST">
+        {% csrf_token %}
+        <label>NT Code</label>
+        <input type="text" name="nt_code" class="w-full p-2 rounded bg-gray-700 text-white mb-4">
+        <button class="bg-cyan-500 hover:bg-cyan-600 text-white py-2 px-4 rounded w-full">Next</button>
+    </form>
+</section>
+{% endblock %}
